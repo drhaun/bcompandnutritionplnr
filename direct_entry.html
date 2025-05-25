@@ -1,0 +1,1052 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Body Composition Assessment</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Glacial+Indifference&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
+  <link href="/static/css/base.css" rel="stylesheet">
+  <script defer src="/static/js/ultra-simple-report.js"></script>
+  <style>
+    :root {
+      --primary-color: #003b59;
+      --secondary-color: #c19962;
+      --secondary-light: #fdf6ec;
+      --text-color: #00263d;
+      --border-color: #c19962;
+      --white: #ffffff;
+      --shadow-color: rgba(0, 38, 61, 0.08);
+      --highlight-color: #fdf1e2;
+      --required-field-bg: #ffe8e8;
+      --optional-field-bg: #e8f4f8;
+      --data-entry-bg: #fff0f0;
+    }
+    
+    body {
+      padding: 20px;
+      font-family: 'Glacial Indifference', sans-serif;
+      color: var(--text-color);
+    }
+    
+    .navbar {
+      background-color: var(--primary-color) !important;
+    }
+    
+    .btn-primary {
+      background-color: var(--primary-color);
+      border-color: var(--primary-color);
+    }
+    
+    .btn-primary:hover {
+      background-color: #00517a;
+      border-color: #00517a;
+    }
+    
+    .btn-success {
+      background-color: var(--secondary-color);
+      border-color: var(--secondary-color);
+    }
+    
+    .btn-success:hover {
+      background-color: #daa76c;
+      border-color: #daa76c;
+    }
+    
+    .card-header.bg-primary {
+      background-color: var(--primary-color) !important;
+    }
+    
+    .card-header.bg-success {
+      background-color: var(--secondary-color) !important;
+    }
+    
+    .card-header.bg-info {
+      background-color: #51829f !important;
+    }
+    
+    .card {
+      margin-bottom: 20px;
+      box-shadow: 0 4px 8px var(--shadow-color);
+      border-color: var(--border-color);
+    }
+    
+    h1, h2 {
+      color: var(--primary-color);
+      margin-bottom: 20px;
+    }
+    
+    .editable-cell {
+      background-color: #fffde7;
+      cursor: text;
+    }
+    
+    .editable-cell:hover {
+      background-color: #fff9c4;
+    }
+    
+    .numeric-cell {
+      text-align: right;
+      font-family: monospace;
+    }
+    
+    .info-icon {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background-color: #007bff;
+      color: white;
+      text-align: center;
+      line-height: 16px;
+      font-size: 12px;
+      font-weight: bold;
+      margin-left: 5px;
+      cursor: help;
+      position: relative;
+    }
+    
+    .info-icon:hover::after {
+      content: attr(data-info);
+      position: absolute;
+      width: 250px;
+      background-color: #333;
+      color: #fff;
+      text-align: left;
+      padding: 10px;
+      border-radius: 6px;
+      z-index: 100;
+      left: 20px;
+      top: -5px;
+      font-weight: normal;
+      font-size: 12px;
+      line-height: 1.4;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Navigation Menu -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4 rounded">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="/">Fitomics</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link active" href="/">Body Composition</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/simple">Simple Report Demo</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    
+    <h1 class="text-center mb-4">Body Composition Assessment</h1>
+    
+    <div class="row">
+      <!-- Client Information -->
+      <div class="col-md-12 mb-4">
+        <div class="card">
+          <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">Client Information</h5>
+          </div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-3">
+                <div class="mb-3">
+                  <label for="client-first-name" class="form-label">First Name</label>
+                  <input type="text" id="client-first-name" class="form-control">
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="mb-3">
+                  <label for="client-last-name" class="form-label">Last Name</label>
+                  <input type="text" id="client-last-name" class="form-control">
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="mb-3">
+                  <label for="client-email" class="form-label">Email</label>
+                  <input type="email" id="client-email" class="form-control">
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="mb-3">
+                  <label for="assessment-date" class="form-label">Assessment Date</label>
+                  <input type="date" id="assessment-date" class="form-control">
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-3">
+                <div class="mb-3">
+                  <label for="gender" class="form-label">Gender</label>
+                  <select id="gender" class="form-select">
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="mb-3">
+                  <label for="dob" class="form-label">Date of Birth</label>
+                  <input type="date" id="dob" class="form-control" onchange="calculateAge()">
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="mb-3">
+                  <label for="age" class="form-label">Age (years)</label>
+                  <input type="number" id="age" class="form-control" min="18" max="100" value="30" onchange="clearDOB()">
+                  <div class="form-text small">Enter age directly or use Date of Birth</div>
+                </div>
+              </div>
+              <!-- 3D Scan Device selector has been moved to the measurement section -->
+            </div>
+            
+            <!-- Note: Height fields have been moved to the Weight Measurement section -->
+          </div>
+        </div>
+      </div>
+      
+      <!-- Weight and Water Measurements -->
+      <div class="col-md-12 mb-4">
+        <div class="card">
+          <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">
+              Weight and Water Measurements
+              <span class="info-icon" data-info="Essential measurements for accurate 3C-Model body composition calculations. Water measurements are critical for properly calculating body fat percentage.">i</span>
+            </h5>
+          </div>
+          <div class="card-body">
+            <div class="row">
+              <!-- Final Weight Section -->
+              <div class="col-md-4">
+                <div class="card h-100">
+                  <div class="card-header bg-info text-white">
+                    <h6 class="mb-0">Step 1: Enter Height & Weight</h6>
+                  </div>
+                  <div class="card-body">
+                    <div class="mb-3">
+                      <label for="height-in" class="form-label">Height (in)</label>
+                      <input type="number" id="height-in" class="form-control" step="0.1" min="0" oninput="calculateHeightCm()">
+                    </div>
+                    <div class="mb-3">
+                      <label for="height-cm" class="form-label">Height (cm)</label>
+                      <input type="number" id="height-cm" class="form-control" step="0.1" min="0" oninput="calculateHeightIn()">
+                    </div>
+                    <div class="mb-3">
+                      <label for="weight-lbs-final" class="form-label">Weight (lbs)</label>
+                      <input type="number" id="weight-lbs-final" class="form-control" step="0.1" min="66" max="660">
+                    </div>
+                    <div class="mb-3">
+                      <label for="weight-kg-final" class="form-label">Weight (kg)</label>
+                      <input type="number" id="weight-kg-final" class="form-control" step="0.1" min="30" max="300">
+                    </div>
+                    
+                    <!-- Height and BMI fields removed -->
+                    
+                    <div class="text-center mt-3">
+                      <button id="confirm-weight-btn" class="btn btn-primary">
+                        <i class="bi bi-check-circle"></i> Confirm
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Water Measurements -->
+              <div class="col-md-8">
+                <div class="card h-100">
+                  <div class="card-header bg-info text-white">
+                    <h6 class="mb-0">Step 2: Water Measurements</h6>
+                  </div>
+                  <div class="card-body">
+                    <div class="row">
+                      <!-- Device 1 -->
+                      <div class="col-md-4">
+                        <div class="mb-2">
+                          <label for="water-device1" class="form-label">Device 1</label>
+                          <input type="text" id="water-device1" class="form-control" placeholder="InBody, Tanita, etc.">
+                        </div>
+                        <div class="mb-2">
+                          <label for="water-percent1" class="form-label">Water % (Device 1)</label>
+                          <input type="number" id="water-percent1" class="form-control water-percent" step="0.1" min="35" max="75">
+                        </div>
+                        <div class="mb-2">
+                          <label for="water-liters1" class="form-label">Water Liters (Device 1)</label>
+                          <input type="number" id="water-liters1" class="form-control water-liters" step="0.1" min="20" max="60" readonly>
+                        </div>
+                      </div>
+                      
+                      <!-- Device 2 -->
+                      <div class="col-md-4">
+                        <div class="mb-2">
+                          <label for="water-device2" class="form-label">Device 2</label>
+                          <input type="text" id="water-device2" class="form-control" placeholder="InBody, Tanita, etc.">
+                        </div>
+                        <div class="mb-2">
+                          <label for="water-percent2" class="form-label">Water % (Device 2)</label>
+                          <input type="number" id="water-percent2" class="form-control water-percent" step="0.1" min="35" max="75">
+                        </div>
+                        <div class="mb-2">
+                          <label for="water-liters2" class="form-label">Water Liters (Device 2)</label>
+                          <input type="number" id="water-liters2" class="form-control water-liters" step="0.1" min="20" max="60" readonly>
+                        </div>
+                      </div>
+                      
+                      <!-- Device 3 -->
+                      <div class="col-md-4">
+                        <div class="mb-2">
+                          <label for="water-device3" class="form-label">Device 3</label>
+                          <input type="text" id="water-device3" class="form-control" placeholder="InBody, Tanita, etc.">
+                        </div>
+                        <div class="mb-2">
+                          <label for="water-percent3" class="form-label">Water % (Device 3)</label>
+                          <input type="number" id="water-percent3" class="form-control water-percent" step="0.1" min="35" max="75">
+                        </div>
+                        <div class="mb-2">
+                          <label for="water-liters3" class="form-label">Water Liters (Device 3)</label>
+                          <input type="number" id="water-liters3" class="form-control water-liters" step="0.1" min="20" max="60" readonly>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <!-- Urine Specific Gravity Section -->
+                    <div class="row mt-3 mb-3">
+                      <div class="col-md-12">
+                        <div class="card border-info">
+                          <div class="card-header bg-info text-white py-2">
+                            <h6 class="mb-0">Hydration Assessment</h6>
+                          </div>
+                          <div class="card-body">
+                            <div class="row">
+                              <div class="col-md-5">
+                                <label for="specific-gravity" class="form-label">Urine Specific Gravity (USG):</label>
+                                <input type="number" class="form-control" id="specific-gravity" name="specific-gravity" 
+                                       placeholder="e.g., 1.020" step="0.001" min="1.000" max="1.040" oninput="updateHydrationStatus()">
+                              </div>
+                              <div class="col-md-7">
+                                <label class="form-label">Hydration Status:</label>
+                                <input type="text" class="form-control" id="hydration-status" readonly>
+                                <div class="form-text mt-1">
+                                  <span class="badge bg-success me-1">1.000-1.010</span> Well Hydrated
+                                  <span class="badge bg-info ms-2 me-1">1.011-1.020</span> Adequately Hydrated
+                                  <span class="badge bg-warning ms-2 me-1">1.021-1.025</span> Mild Dehydration
+                                  <span class="badge bg-danger ms-2 me-1">>1.025</span> Significant Dehydration
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <!-- Water Summary -->
+                    <div class="row mt-3">
+                      <div class="col-md-6">
+                        <div class="mb-2">
+                          <label for="water-liters-avg" class="form-label">Average Water (Liters)</label>
+                          <input type="number" id="water-liters-avg" class="form-control" step="0.1" min="20" max="60" readonly>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="mb-2">
+                          <label for="water-liters-final" class="form-label font-weight-bold">Final Water (Liters)</label>
+                          <input type="number" id="water-liters-final" class="form-control" step="0.1" min="20" max="60">
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <!-- Calculate Water Button -->
+                    <div class="text-center mt-3">
+                      <button id="calculate-water-btn" class="btn btn-primary">
+                        <i class="bi bi-droplet"></i> Calculate Water Values
+                      </button>
+                      <button id="confirm-water-btn" class="btn btn-success ml-2">
+                        <i class="bi bi-check-circle"></i> Confirm Water
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 3D Scan Measurements -->
+      <div class="col-md-6">
+        <div class="card">
+          <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">
+              Step 3: 3D Scan Measurements
+              <span class="info-icon" data-info="Measurements from body scanning devices like Fit3D or Styku. These provide circumference measurements that are useful for tracking progress over time and general body composition trends.">i</span>
+            </h5>
+          </div>
+          <div class="card-body">
+            <!-- Simple File Upload -->
+            <div class="mb-3">
+              <label for="scan-csv-file-input" class="form-label"><strong>Upload 3D Scan CSV (Fit3D or Styku)</strong></label>
+              <input type="file" id="scan-csv-file-input" accept=".csv" class="form-control form-control-lg">
+              <div id="scan-csv-status" class="mt-2 text-primary small">After uploading, select a record from the table below</div>
+            </div>
+            
+            <!-- Container for scan measurements table -->
+            <div class="scan-measurements-section mt-3">
+              <!-- Table will be populated here via JavaScript -->
+            </div>
+            
+            <!-- Container for selected scan results -->
+            <div class="scan-results-section mt-4">
+              <!-- Selected record info will appear here -->
+            </div>
+            
+            <!-- Accept for Report Button -->
+            <div class="text-center mt-3 mb-3">
+              <button id="calculate-scan-values-btn" class="btn btn-success btn-lg">
+                <i class="bi bi-check-circle"></i> Accept for Report
+              </button>
+              <div class="text-muted small mt-2">Click after selecting a record to use these values in the report</div>
+            </div>
+            
+            <!-- Hidden fields to store values (needed for calculations) -->
+            <div class="d-none">
+              <input type="date" id="scan-date">
+              <span id="neck-circumference"></span>
+              <span id="chest-circumference"></span>
+              <span id="upper-arm-circumference"></span>
+              <span id="waist-circumference"></span>
+              <span id="abdomen-circumference"></span>
+              <span id="hip-circumference"></span>
+              <span id="thigh-circumference"></span>
+              <span id="calf-circumference"></span>
+              <span id="wrist-circumference"></span>
+              <span id="forearm-circumference"></span>
+              <span id="left-bicep"></span>
+              <span id="right-bicep"></span>
+              <span id="left-forearm"></span>
+              <span id="right-forearm"></span>
+              <span id="left-thigh"></span>
+              <span id="right-thigh"></span>
+              <span id="left-calf"></span>
+              <span id="right-calf"></span>
+              <span id="scan-body-fat"></span>
+              <span id="display-scan-body-fat"></span>
+              <span id="waist-hip-ratio"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Ultrasound Measurements -->
+      <div class="col-md-6">
+        <div class="card">
+          <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">
+              Step 4: Ultrasound Thickness Measurements
+              <span class="info-icon" data-info="Ultrasound devices like the BodyMetrix BX-2000 use ultrasound technology to measure the thickness of fat tissues at specific sites on the body. These measurements are converted to body fat percentage using site-specific formulas.">i</span>
+            </h5>
+          </div>
+          <div class="card-body">
+            <!-- Simple File Upload -->
+            <div class="mb-3">
+              <label for="us-csv-file-input" class="form-label"><strong>Upload Ultrasound CSV (BodyMetrix)</strong></label>
+              <input type="file" id="us-csv-file-input" accept=".csv" class="form-control form-control-lg">
+              <div id="us-csv-status" class="mt-2 text-primary small">After uploading, select a record from the table below</div>
+            </div>
+            
+            <!-- Container for ultrasound measurements table -->
+            <div class="us-measurements-section mt-3">
+              <!-- Table will be populated here via JavaScript -->
+            </div>
+            
+            <!-- Container for selected ultrasound results -->
+            <div class="us-results-section mt-4">
+              <!-- Selected record info will appear here -->
+            </div>
+            
+            <!-- Protocol Selection -->
+            <div class="mt-3">
+              <div class="row mb-2">
+                <div class="col-md-4">
+                  <label for="sites-count" class="form-label fw-bold">Select Protocol:</label>
+                </div>
+                <div class="col-md-8">
+                  <select id="sites-count" class="form-select" onchange="updateSiteInfo()">
+                    <option value="3">3-sites Jackson & Pollock</option>
+                    <option value="4">4-sites Jackson & Pollock</option>
+                    <option value="7" selected>7-sites Jackson & Pollock</option>
+                  </select>
+                  <div class="form-text" id="site-info-text">
+                    7-site method: Chest, Subscapular, Axilla, Tricep, Abdomen, Hip, Thigh
+                  </div>
+                </div>
+              </div>
+            </div>
+                
+            <!-- Calculated Thickness Values (Enhanced) -->
+            <div class="card mt-3">
+              <div class="card-header bg-success text-white">
+                <h5 class="mb-0">Thickness Analysis</h5>
+              </div>
+              <div class="card-body">
+                <div class="alert alert-success">
+                  <i class="bi bi-info-circle"></i> Click the button below to calculate body density using your selected protocol.
+                </div>
+                
+                <!-- Calculate Body Density Button INSIDE Thickness Analysis card -->
+                <div class="text-center mb-3">
+                  <button id="calculate-thickness-btn" class="btn btn-primary btn-lg">
+                    <i class="bi bi-calculator"></i> Calculate Body Density
+                  </button>
+                </div>
+                
+                <table class="table table-sm table-bordered">
+                  <tr>
+                    <td><strong>Thickness Sum (mm)</strong></td>
+                    <td id="thickness-sum" class="font-weight-bold"></td>
+                  </tr>
+                  <tr class="table-info">
+                    <td><strong>Doubled Thickness Sum (mm)</strong></td>
+                    <td id="doubled-thickness-sum" class="font-weight-bold"></td>
+                  </tr>
+                  <tr class="table-primary">
+                    <td><strong>Body Density (g/cm³)</strong></td>
+                    <td id="body-density" class="font-weight-bold"></td>
+                  </tr>
+                  <tr class="table-success">
+                    <td><strong>Ultrasound Body Fat (%)</strong></td>
+                    <td id="ultrasound-body-fat-result" class="font-weight-bold"></td>
+                  </tr>
+                </table>
+                
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="variables-container">
+                      <h6 class="mb-3 border-bottom pb-2">Step 5: Calculate 3C-Model Body Composition</h6>
+                      
+                      <!-- Body Density Results -->
+                      <div class="alert alert-success">
+                        <div class="d-flex justify-content-between align-items-center">
+                          <strong>Body Density: <span id="body-density-result">0.00</span> g/cm³</strong>
+                          <div class="form-text mb-0">Calculated from ultrasound measurements</div>
+                        </div>
+                      </div>
+                      
+                      <!-- Water Verification -->
+                      <div class="alert alert-info">
+                        <div class="d-flex justify-content-between align-items-center">
+                          <strong>Body Water: <span id="water-liters-display">0.0</span> liters (<span id="water-percent-display">0.0</span>%)</strong>
+                          <div class="form-text mb-0">From weight and water measurements</div>
+                        </div>
+                      </div>
+                      
+                      <!-- 3C Model Call to Action -->
+                      <div class="text-center">
+                        <button id="calculate-3c-model-btn" class="btn btn-success btn-lg mt-4">
+                          <i class="bi bi-calculator"></i> Calculate 3C-Model Body Composition
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Hidden fields -->
+            <div class="d-none">
+              <input type="date" id="ultrasound-date">
+              <span id="chest-thickness"></span>
+              <span id="abdomen-thickness"></span>
+              <span id="thigh-thickness"></span>
+              <span id="tricep-thickness"></span>
+              <span id="subscapular-thickness"></span>
+              <span id="axilla-thickness"></span>
+              <span id="hip-thickness"></span>
+              <span id="ultrasound-body-fat"></span>
+              <span id="ultrasound-water-percent"></span>
+              <span id="two-x-thickness-sum"></span>
+              <span id="thickness-sum-squared"></span>
+              <span id="two-x-thickness-sum-squared"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Hidden Fields for Weight and Water Measurements -->
+      <div class="d-none">
+        <!-- Required fields that might be used by JS scripts -->
+        <input type="number" id="weight-lbs-final" value="180">
+        <input type="number" id="weight-kg-final" value="81.8">
+        <input type="number" id="water-percent-final" value="60">
+        <input type="number" id="water-liters-final" value="49.1">
+        <input type="number" id="specific-gravity-hidden" value="1.020">
+        <span id="specific-gravity-table-hidden"></span>
+        
+        <!-- Weight measurement fields -->
+        <span id="weight-scale1"></span>
+        <span id="weight-lbs1"></span>
+        <span id="weight-kg1"></span>
+        <span id="weight-scale2"></span>
+        <span id="weight-lbs2"></span>
+        <span id="weight-kg2"></span>
+        <span id="weight-scale3"></span>
+        <span id="weight-lbs3"></span>
+        <span id="weight-kg3"></span>
+        <span id="weight-lbs-avg"></span>
+        <span id="weight-kg-avg"></span>
+        
+        <!-- Water measurement fields -->
+        <span id="water-device1-table"></span>
+        <span id="water-percent1-table"></span>
+        <span id="water-liters1-table"></span>
+        <span id="water-device2-table"></span>
+        <span id="water-percent2-table"></span>
+        <span id="water-liters2-table"></span>
+        <span id="water-device3-table"></span>
+        <span id="water-percent3-table"></span>
+        <span id="water-liters3-table"></span>
+        <span id="water-percent-avg-table"></span>
+        <span id="water-liters-avg-table"></span>
+        <span id="hydration-status-table"></span>
+        <span id="water-percent-final-table"></span>
+        <span id="water-liters-final-table"></span>
+      </div>
+      
+      <!-- 3C-Model Results Section -->
+      <div class="col-md-12 mt-4">
+        <div class="card">
+          <div class="card-header bg-success text-white">
+            <h5 class="mb-0">3C-Model Results</h5>
+          </div>
+          <div class="card-body">
+            <div class="alert alert-info">
+              <strong>3C-Model:</strong> Combines Body Density (from ultrasound) and Total Body Water to provide a more accurate body composition assessment.
+            </div>
+            
+
+            
+            <div id="results-table" class="table-responsive mt-4" style="display: none;">
+              <table class="table table-bordered">
+                <thead class="table-primary">
+                  <tr>
+                    <th>Method</th>
+                    <th>Body Fat %</th>
+                    <th>Fat Mass (kg)</th>
+                    <th>Fat Mass (lbs)</th>
+                    <th>FFM (kg)</th>
+                    <th>FFM (lbs)</th>
+                    <th>FMI (kg/m²)</th>
+                    <th>FFMI (kg/m²)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="table-success">
+                    <td><strong>3C-Model</strong></td>
+                    <td id="result-3c-bf" class="numeric-cell">--</td>
+                    <td id="result-3c-fm-kg" class="numeric-cell">--</td>
+                    <td id="result-3c-fm-lbs" class="numeric-cell">--</td>
+                    <td id="result-3c-ffm-kg" class="numeric-cell">--</td>
+                    <td id="result-3c-ffm-lbs" class="numeric-cell">--</td>
+                    <td id="result-3c-fmi" class="numeric-cell">--</td>
+                    <td id="result-3c-ffmi" class="numeric-cell">--</td>
+                  </tr>
+                </tbody>
+              </table>
+              
+            </div>
+          </div>
+        </div>
+      </div>
+      
+
+    </div>
+  </div>
+  
+  <!-- HTML Report Modal -->
+  <div class="modal fade" id="reportModal" tabindex="-1" aria-labelledby="reportModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+      <div class="modal-content">
+        <div class="modal-header bg-primary text-white">
+          <h5 class="modal-title" id="reportModalLabel">Body Composition Assessment Report</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div id="report-content">
+            <!-- Report content will be generated here -->
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" id="print-report-btn" class="btn btn-primary">
+            <i class="bi bi-printer"></i> Print Report
+          </button>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Generate Report Section -->
+    <div class="row mt-4 mb-4">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header bg-dark text-white">
+            <h5 class="mb-0">Generate Report</h5>
+          </div>
+          <div class="card-body">
+            <div class="alert alert-info text-center">
+              Generate a comprehensive HTML report containing all client data, measurements, and 3C-Model results.
+            </div>
+            <div class="text-center">
+              <button type="button" class="btn btn-primary btn-lg px-5" id="direct-link-btn">
+                <i class="bi bi-file-earmark-text"></i> Generate Comprehensive Report
+              </button>
+              
+
+              
+              <script>
+                // Diagnostic function to check form values
+                function showFormValues() {
+                  const firstName = document.getElementById('client-first-name') ? document.getElementById('client-first-name').value : 'NOT FOUND';
+                  const lastName = document.getElementById('client-last-name') ? document.getElementById('client-last-name').value : 'NOT FOUND';
+                  
+                  alert('Form Values:\n' + 
+                        'First Name: "' + firstName + '"\n' +
+                        'Last Name: "' + lastName + '"\n' +
+                        'Element exists: ' + (document.getElementById('client-first-name') !== null));
+                }
+                
+                function createInlineReport() {
+                  // Add a console log to show this function is being called
+                  console.log('Creating direct report with form values');
+                  
+                  try {
+                    // First display the values we're about to use
+                    showFormValues();
+                    
+                    // Get form values directly with the CORRECT IDs - log every step
+                    console.log('Getting first name...');
+                    const firstName = document.getElementById('client-first-name') ? document.getElementById('client-first-name').value : '';
+                    console.log('Getting last name...');
+                    const lastName = document.getElementById('client-last-name') ? document.getElementById('client-last-name').value : '';
+                    const fullName = firstName + ' ' + lastName;
+                    console.log('Full name:', fullName);
+                    
+                    // Get all other values we need
+                    const age = document.getElementById('age') ? document.getElementById('age').value : '';
+                    const gender = document.getElementById('gender') ? document.getElementById('gender').value : '';
+                    const email = document.getElementById('client-email') ? document.getElementById('client-email').value : '';
+                    const heightIn = document.getElementById('height-in') ? document.getElementById('height-in').value : '';
+                    const heightCm = document.getElementById('height-cm') ? document.getElementById('height-cm').value : '';
+                    const weightLbs = document.getElementById('weight-lbs') ? document.getElementById('weight-lbs').value : '';
+                    const weightKg = document.getElementById('weight-kg') ? document.getElementById('weight-kg').value : '';
+                    
+                    console.log('Creating HTML report...');
+                    
+                    // Create report HTML with explicit values
+                    const reportHTML = `
+                      <!DOCTYPE html>
+                      <html>
+                      <head>
+                        <title>Body Composition Report</title>
+                        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+                        <style>
+                          body { padding: 20px; }
+                          .header { text-align: center; margin-bottom: 30px; }
+                          .section { margin-bottom: 20px; padding: 15px; border: 1px solid #ddd; border-radius: 5px; }
+                        </style>
+                      </head>
+                      <body>
+                        <div class="container">
+                          <div class="header">
+                            <h1>Body Composition Report</h1>
+                            <p>Generated on ${new Date().toLocaleDateString()}</p>
+                          </div>
+                          
+                          <div class="section">
+                            <h2>Client Information</h2>
+                            <p><strong>Name:</strong> ${fullName}</p>
+                            <p><strong>Age:</strong> ${age}</p>
+                            <p><strong>Gender:</strong> ${gender}</p>
+                            <p><strong>Email:</strong> ${email}</p>
+                          </div>
+                          
+                          <div class="section">
+                            <h2>Measurements</h2>
+                            <p><strong>Height:</strong> ${heightIn} in (${heightCm} cm)</p>
+                            <p><strong>Weight:</strong> ${weightLbs} lbs (${weightKg} kg)</p>
+                          </div>
+                          
+                          <div class="mt-4 text-center">
+                            <button class="btn btn-primary" onclick="window.print()">Print this Report</button>
+                            <p class="mt-3">Values from form:<br>
+                            First Name: "${firstName}"<br>
+                            Last Name: "${lastName}"<br>
+                            Age: "${age}"
+                            </p>
+                          </div>
+                        </div>
+                      </body>
+                      </html>
+                    `;
+                    
+                    console.log('Opening new window...');
+                    
+                    // Open a new window with the report
+                    const reportWindow = window.open('', '_blank');
+                    if (reportWindow) {
+                      reportWindow.document.write(reportHTML);
+                      reportWindow.document.close();
+                      console.log('Report displayed in new window');
+                    } else {
+                      alert('Please allow pop-ups to view the report');
+                      console.error('Could not open report window - pop-ups blocked?');
+                    }
+                  } catch (error) {
+                    console.error('Error creating report:', error);
+                    alert('Error creating report: ' + error.message);
+                  }
+                }
+              </script>
+              
+              <script>
+                function openSimpleReport() {
+                  // Collect client data
+                  const firstName = document.getElementById('first-name').value || '';
+                  const lastName = document.getElementById('last-name').value || '';
+                  const age = document.getElementById('age').value || '';
+                  const gender = document.getElementById('gender').value || '';
+                  const email = document.getElementById('email').value || '';
+                  const assessmentDate = document.getElementById('assessment-date').value || '';
+                  
+                  const heightIn = document.getElementById('height-in').value || '';
+                  const heightCm = document.getElementById('height-cm').value || '';
+                  const weightLbs = document.getElementById('weight-lbs').value || '';
+                  const weightKg = document.getElementById('weight-kg').value || '';
+                  const bmi = document.getElementById('bmi-result') ? document.getElementById('bmi-result').value : '';
+                  const bmiCategory = document.getElementById('bmi-category') ? document.getElementById('bmi-category').value : '';
+                  
+                  const scanDevice = document.getElementById('scan-device').value || '';
+                  const scanDate = document.getElementById('scan-date').value || '';
+                  const bodyFatPercent = document.getElementById('body-fat-percent').value || '';
+                  const leanMassLbs = document.getElementById('lean-mass-lbs').value || '';
+                  const leanMassKg = document.getElementById('lean-mass-kg').value || '';
+                  const fatMassLbs = document.getElementById('fat-mass-lbs').value || '';
+                  const fatMassKg = document.getElementById('fat-mass-kg').value || '';
+                  
+                  const bodyDensity = document.getElementById('body-density').value || '';
+                  const usBodyFat = document.getElementById('us-body-fat').value || '';
+                  
+                  const waterDevice = document.getElementById('water-device1').value || '';
+                  const waterPercent = document.getElementById('water-percent1').value || '';
+                  const waterLiters = document.getElementById('water-liters1').value || '';
+                  const specificGravity = document.getElementById('specific-gravity').value || '';
+                  const hydrationStatus = document.getElementById('hydration-status').value || '';
+                  
+                  // Try to get 3C-Model results
+                  let modelBf = '';
+                  let modelFmKg = '';
+                  let modelFmLbs = '';
+                  let modelFfmKg = '';
+                  let modelFfmLbs = '';
+                  let modelFmi = '';
+                  let modelFfmi = '';
+                  
+                  // Check if elements exist and have content
+                  if (document.getElementById('result-3c-bf')) {
+                    modelBf = document.getElementById('result-3c-bf').textContent;
+                  }
+                  if (document.getElementById('result-3c-fm-kg')) {
+                    modelFmKg = document.getElementById('result-3c-fm-kg').textContent;
+                  }
+                  if (document.getElementById('result-3c-fm-lbs')) {
+                    modelFmLbs = document.getElementById('result-3c-fm-lbs').textContent;
+                  }
+                  if (document.getElementById('result-3c-ffm-kg')) {
+                    modelFfmKg = document.getElementById('result-3c-ffm-kg').textContent;
+                  }
+                  if (document.getElementById('result-3c-ffm-lbs')) {
+                    modelFfmLbs = document.getElementById('result-3c-ffm-lbs').textContent;
+                  }
+                  if (document.getElementById('result-3c-fmi')) {
+                    modelFmi = document.getElementById('result-3c-fmi').textContent;
+                  }
+                  if (document.getElementById('result-3c-ffmi')) {
+                    modelFfmi = document.getElementById('result-3c-ffmi').textContent;
+                  }
+                  
+                  // Build URL with parameters
+                  let reportUrl = '/static/report.html?';
+                  reportUrl += 'name=' + encodeURIComponent(firstName + ' ' + lastName);
+                  reportUrl += '&age=' + encodeURIComponent(age);
+                  reportUrl += '&gender=' + encodeURIComponent(gender);
+                  reportUrl += '&email=' + encodeURIComponent(email);
+                  reportUrl += '&assessmentDate=' + encodeURIComponent(assessmentDate);
+                  
+                  reportUrl += '&heightIn=' + encodeURIComponent(heightIn);
+                  reportUrl += '&heightCm=' + encodeURIComponent(heightCm);
+                  reportUrl += '&weightLbs=' + encodeURIComponent(weightLbs);
+                  reportUrl += '&weightKg=' + encodeURIComponent(weightKg);
+                  reportUrl += '&bmi=' + encodeURIComponent(bmi);
+                  reportUrl += '&bmiCategory=' + encodeURIComponent(bmiCategory);
+                  
+                  reportUrl += '&scanDevice=' + encodeURIComponent(scanDevice);
+                  reportUrl += '&scanDate=' + encodeURIComponent(scanDate);
+                  reportUrl += '&bodyFatPercent=' + encodeURIComponent(bodyFatPercent);
+                  reportUrl += '&leanMassLbs=' + encodeURIComponent(leanMassLbs);
+                  reportUrl += '&leanMassKg=' + encodeURIComponent(leanMassKg);
+                  reportUrl += '&fatMassLbs=' + encodeURIComponent(fatMassLbs);
+                  reportUrl += '&fatMassKg=' + encodeURIComponent(fatMassKg);
+                  
+                  reportUrl += '&bodyDensity=' + encodeURIComponent(bodyDensity);
+                  reportUrl += '&usBodyFat=' + encodeURIComponent(usBodyFat);
+                  
+                  reportUrl += '&waterDevice=' + encodeURIComponent(waterDevice);
+                  reportUrl += '&waterPercent=' + encodeURIComponent(waterPercent);
+                  reportUrl += '&waterLiters=' + encodeURIComponent(waterLiters);
+                  reportUrl += '&specificGravity=' + encodeURIComponent(specificGravity);
+                  reportUrl += '&hydrationStatus=' + encodeURIComponent(hydrationStatus);
+                  
+                  reportUrl += '&modelBf=' + encodeURIComponent(modelBf);
+                  reportUrl += '&modelFmKg=' + encodeURIComponent(modelFmKg);
+                  reportUrl += '&modelFmLbs=' + encodeURIComponent(modelFmLbs);
+                  reportUrl += '&modelFfmKg=' + encodeURIComponent(modelFfmKg);
+                  reportUrl += '&modelFfmLbs=' + encodeURIComponent(modelFfmLbs);
+                  reportUrl += '&modelFmi=' + encodeURIComponent(modelFmi);
+                  reportUrl += '&modelFfmi=' + encodeURIComponent(modelFfmi);
+                  
+                  // Open the report in a new tab
+                  window.open(reportUrl, '_blank');
+                }
+              </script>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Required for datalists -->
+  <datalist id="weight-devices">
+    <option value="InBody">
+    <option value="Tanita">
+    <option value="Scale">
+    <option value="Other">
+  </datalist>
+  
+  <datalist id="water-devices">
+    <option value="InBody">
+    <option value="Tanita">
+    <option value="BIA">
+    <option value="Other">
+  </datalist>
+  
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.3.2/papaparse.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
+  
+  <!-- Fix JavaScript conflicts -->
+  <script src="/static/js/no-conflict-fix.js"></script>
+  
+  <!-- Include CSV functionality -->
+  <script src="/static/js/improved-csv-display.js"></script>
+  <script src="/static/js/simple-variables-table.js"></script>
+  <script src="/static/js/site-info-update.js"></script>
+  <script src="/static/js/ultrasound-variables-table.js"></script>
+  <script src="/static/js/thickness-button-fix.js"></script>
+  <script src="/static/js/scan-table-fix.js"></script>
+  <script src="/static/js/simple-protocol-formulas.js"></script>
+  <script src="/static/js/direct-thickness-calculator.js"></script>
+  <script src="/static/js/enhanced-3c-model-calculator.js"></script>
+  <script src="/static/js/hydration-status.js"></script>
+  <script src="/static/js/bmi-calculator.js"></script>
+  <script src="/static/js/body-composition-indices.js"></script>
+  <script src="/static/js/html-report-generator.js"></script>
+  <script src="/static/js/add-report-button.js"></script>
+  <script src="/static/js/very-simple-report.js"></script>
+  
+  <script>
+  // Simplified height/weight conversion functions
+  function calculateHeightIn() {
+    const heightCm = parseFloat(document.getElementById('height-cm').value);
+    if (heightCm) {
+      const heightIn = (heightCm / 2.54).toFixed(1);
+      document.getElementById('height-in').value = heightIn;
+    }
+  }
+  
+  function calculateHeightCm() {
+    const heightIn = parseFloat(document.getElementById('height-in').value);
+    if (heightIn) {
+      const heightCm = (heightIn * 2.54).toFixed(1);
+      document.getElementById('height-cm').value = heightCm;
+    }
+  }
+  
+  // Add event listener for the confirm button
+  document.addEventListener('DOMContentLoaded', function() {
+    const confirmBtn = document.getElementById('confirm-weight-btn');
+    if (confirmBtn) {
+      confirmBtn.addEventListener('click', function() {
+        alert('Height and weight confirmed!');
+      });
+    }
+  });
+  </script>
+  
+  <!-- Helper functions -->
+  <script>
+    
+    function calculateAge() {
+      const dob = document.getElementById('dob').value;
+      if (dob) {
+        const birthDate = new Date(dob);
+        const today = new Date();
+        let age = today.getFullYear() - birthDate.getFullYear();
+        const monthDifference = today.getMonth() - birthDate.getMonth();
+        
+        if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < birthDate.getDate())) {
+          age--;
+        }
+        
+        document.getElementById('age').value = age;
+      }
+    }
+    
+    function clearDOB() {
+      document.getElementById('dob').value = '';
+    }
+    
+    // Set the current date as default
+    document.addEventListener('DOMContentLoaded', function() {
+      const today = new Date().toISOString().split('T')[0];
+      document.getElementById('assessment-date').value = today;
+      
+      // Load the weight-water calculator
+      if (typeof setupWeightConverters === 'function') {
+        setupWeightConverters();
+        setupWaterCalculators();
+        setupAverageWaterCalculation();
+      } else {
+        // Load the script dynamically if not already loaded
+        const script = document.createElement('script');
+        script.src = '/static/js/weight-water-calculator.js';
+        script.onload = function() {
+          setupWeightConverters();
+          setupWaterCalculators();
+          setupAverageWaterCalculation();
+        };
+        document.head.appendChild(script);
+      }
+    });
+  </script>
+  
+  <!-- Report generation scripts removed -->
+</body>
+</html>
